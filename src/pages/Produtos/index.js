@@ -19,14 +19,26 @@ export default function App() {
     })
   }
 
+  function excluir(produto) {
+    let resultado = window.confirm('Deseja realmente excluir o produto?');
+    if (resultado) {
+      api.delete('/produto', { data: produto }).then(() => {
+        alert('Produto deletado com sucesso!');
+        getProdutos();
+      }).catch(err => {
+        alert('Erro ao excluir o produto.');
+      });
+    }
+  }
+
   return (
     <>
       <Nav />
       <div className="container" style={{ marginTop: 10 }}>
         <Link to="/produto" className="btn btn-success" style={{ width: '100%', marginBottom: 10 }}>
-          <i class="bi bi-plus-circle"></i> Novo produto
+          <i className="bi bi-plus-circle"></i> Novo produto
         </Link>
-        <table class="table table-hover" style={{ textAlign: 'center' }}>
+        <table className="table table-hover" style={{ textAlign: 'center' }}>
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -43,18 +55,18 @@ export default function App() {
               (produtos) &&
               produtos.map(produto => {
                 return (
-                  <tr>
+                  <tr key={produto.id}>
                     <td>{produto.id}</td>
                     <td>{produto.nome}</td>
                     <td>{produto.quantidade}</td>
                     <td>R$ {produto.valor}</td>
                     <td>
-                      <button className="btn btn-warning">
+                      <Link to='/produto/editar' state={{ produto }} className="btn btn-warning">
                         Editar
-                      </button>
+                      </Link>
                     </td>
                     <td>
-                      <button className="btn btn-danger">
+                      <button className="btn btn-danger" onClick={() => excluir(produto)}>
                         Excluir
                       </button>
                     </td>
